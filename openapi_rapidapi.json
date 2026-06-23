@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Japan Postal Code & Address API",
+    "description": "Look up a Japanese address from a 7-digit postal code, or search postal codes by address text. Returns prefecture, city and town with katakana readings. 120,000+ postal codes from Japan Post. Perfect for checkout/address auto-fill.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "https://japan-zipcode-api.onrender.com" }
+  ],
+  "paths": {
+    "/v1/zip": {
+      "get": {
+        "summary": "Postal code -> address",
+        "description": "Look up the address(es) for a 7-digit postal code (hyphen allowed).",
+        "parameters": [
+          { "name": "code", "in": "query", "required": true, "schema": { "type": "string", "example": "1000001" } }
+        ],
+        "responses": { "200": { "description": "Address(es) for the postal code" } }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "summary": "Address text -> postal codes",
+        "description": "Search postal codes by free-text address (q) and/or prefecture/city/town filters (all partial-match).",
+        "parameters": [
+          { "name": "q", "in": "query", "required": false, "schema": { "type": "string", "example": "梅田" } },
+          { "name": "prefecture", "in": "query", "required": false, "schema": { "type": "string", "example": "大阪府" } },
+          { "name": "city", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "town", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }
+        ],
+        "responses": { "200": { "description": "Matching postal codes + addresses" } }
+      }
+    },
+    "/v1/prefectures": {
+      "get": {
+        "summary": "List the 47 prefectures",
+        "description": "List of Japanese prefecture names. No parameters.",
+        "responses": { "200": { "description": "Prefecture list" } }
+      }
+    }
+  }
+}

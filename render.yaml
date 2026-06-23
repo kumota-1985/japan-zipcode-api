@@ -1,0 +1,14 @@
+# Render Blueprint — plain Python FastAPI. Bundled ~23MB postal-code dataset is held in
+# memory (~150MB resident); fits the FREE plan but if it OOMs, bump plan to "starter".
+services:
+  - type: web
+    name: japan-zipcode-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: RAPIDAPI_PROXY_SECRET
+        sync: false

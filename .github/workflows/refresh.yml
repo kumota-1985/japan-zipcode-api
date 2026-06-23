@@ -1,0 +1,31 @@
+name: Refresh postal-code data
+
+on:
+  schedule:
+    - cron: "0 5 2 * *"        # 毎月2日 05:00 UTC に日本郵便データを再取得
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Refresh from Japan Post
+        run: python refresh_data.py
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore: refresh postal-code data [skip ci]"
+            git push
+          fi
